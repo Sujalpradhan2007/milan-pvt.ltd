@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="admin-wrap admin-dashboard">
+  <header class="admin-hero">
+    <div><span class="admin-kicker">WEBSITE CONTROL CENTER</span><h1>{{ site.company_name }}</h1><p>Manage your products, offers, photos and company details in one place.</p></div>
+    <div class="admin-actions"><a class="preview-btn" href="{{ url_for('home') }}" target="_blank">View Website ↗</a><a class="btn" href="{{ url_for('logout') }}">Logout</a></div>
+  </header>
+
+  <section class="admin-stats">
+    <div><b>{{ products|length }}</b><span>Products</span></div><div><b>{{ banners|length }}</b><span>Festival Banners</span></div><div><b>{{ gallery|length }}</b><span>Gallery Images</span></div>
+  </section>
+
+  <div class="admin-grid arranged-grid">
+    <section class="admin-panel product-panel"><div class="panel-title"><span>01</span><div><h3>Add Product / Raw Material</h3><p>Select a raw-material category, then add its photo and price for the website.</p></div></div>
+      <form action="{{ url_for('save_product') }}" method="post" enctype="multipart/form-data">
+        <div class="form-row"><div><label>Category</label><select name="category"><option>Hydraulic Paper Plate Machine</option><option>Paper Cup Machine</option><option>Automatic Agarbatti Machine</option><option>Paper Plate Raw Material</option><option>Paper Cup Raw Material</option><option>Agarbatti Raw Material</option></select></div><div><label>Price</label><input name="price" placeholder="₹ 00,000"></div></div>
+        <label>Product Name</label><input name="name_en" required placeholder="Example: Automatic Paper Cup Machine">
+        <label>Description</label><textarea name="description_en" rows="3" placeholder="Short product description"></textarea>
+        <label>Specifications</label><input name="specifications_en" placeholder="Example: 45–60 cups per minute">
+        <div class="form-row"><div><label>Offer</label><input name="offer" placeholder="Example: Diwali Offer"></div><div><label>Video URL</label><input name="video" type="url" placeholder="YouTube video link"></div></div>
+        <label>Product / Raw Material Photo</label><input type="file" name="image" accept="image/*"><label class="check-label"><input type="checkbox" name="active" checked> Show this product on website</label><button class="btn" type="submit">Publish Product / Raw Material</button>
+      </form>
+    </section>
+
+    <section class="admin-panel media-panel"><div class="panel-title"><span>02</span><div><h3>Offers & Gallery</h3><p>Keep seasonal promotions and photographs fresh.</p></div></div>
+      <form action="{{ url_for('save_banner') }}" method="post" enctype="multipart/form-data"><h4>Festival Offer Photo</h4><p>Upload a photo for Diwali, Dussehra, Holi or any special offer.</p><label>Offer Title</label><input name="title_en" placeholder="Dussehra Bumper Offer"><label>Offer Description</label><input name="subtitle_en" placeholder="Your special offer message"><div class="form-row"><div><label>Festival Offer Photo</label><input type="file" name="image" accept="image/*"></div><div><label>Button Link</label><input name="link" placeholder="/products"></div></div><button class="btn" type="submit">Publish Festival Offer</button></form>
+      <div class="divider"></div>
+      <form action="{{ url_for('save_gallery') }}" method="post" enctype="multipart/form-data"><h4>Gallery Photo</h4><div class="form-row"><div><label>Photo</label><input required type="file" name="image" accept="image/*"></div><div><label>Photo Type</label><select name="type"><option>Factory</option><option>Product</option><option>Installation</option></select></div></div><label>Caption</label><input name="caption_en" placeholder="Example: Factory production floor"><button class="btn" type="submit">Upload Photo</button></form>
+    </section>
+
+    <section class="admin-panel company-panel"><div class="panel-title"><span>03</span><div><h3>Company Details</h3><p>These details appear on your public website.</p></div></div>
+      <form action="{{ url_for('save_settings') }}" method="post" enctype="multipart/form-data"><label>Company Name</label><input name="company_name" value="{{ site.company_name }}"><div class="form-row"><div><label>Phone Number</label><input name="phone" value="{{ site.phone }}"></div><div><label>WhatsApp Number</label><input name="whatsapp" value="{{ site.whatsapp }}"></div></div><label>Email Address</label><input name="email" value="{{ site.email }}"><label>Office Address</label><input name="address" value="{{ site.address }}"><div class="form-row"><div><label>Company Logo</label><input type="file" name="logo" accept="image/*"></div><div><label>Home Page Background Photo</label><input type="file" name="hero_background" accept="image/*"></div></div><p>Background photo will appear behind the text on the front-page top section.</p><button class="btn" type="submit">Save Company Details & Background</button></form>
+    </section>
+
+    <section class="admin-panel list-panel"><div class="panel-title"><span>04</span><div><h3>Website Content</h3><p>Edit or remove published content.</p></div></div><h4>Products</h4><div class="list">{% for p in products %}<div class="list-item"><span><strong>{{ tr(p.name,'en') }}</strong><small>{{ p.category }} · {{ p.price }}</small></span><span><a class="small-edit" href="{{ url_for('edit_product',id=p.id) }}">Edit</a><form action="{{ url_for('delete',kind='product',id=p.id) }}" method="post"><button class="delete">Remove</button></form></span></div>{% else %}<p class="empty">No products yet.</p>{% endfor %}</div><h4>Festival Banners</h4>{% for b in banners %}<div class="list-item"><span>{{ tr(b.title,'en') }}</span><form action="{{ url_for('delete',kind='banner',id=b.id) }}" method="post"><button class="delete">Remove</button></form></div>{% else %}<p class="empty">No banners yet.</p>{% endfor %}<h4>Gallery</h4>{% for g in gallery %}<div class="list-item"><span>{{ tr(g.caption,'en') or g.type }}</span><form action="{{ url_for('delete',kind='gallery',id=g.id) }}" method="post"><button class="delete">Remove</button></form></div>{% else %}<p class="empty">No gallery photos yet.</p>{% endfor %}</section>
+  </div>
+</main>
+{% endblock %}

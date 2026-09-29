@@ -1,0 +1,18 @@
+# Milan Enterprises Website
+
+A trilingual Flask catalogue and admin-managed website for machinery and raw materials.
+
+## Run locally
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+py app.py
+```
+
+Open `http://127.0.0.1:5000`. Admin panel: `http://127.0.0.1:5000/admin`
+
+Initial admin credentials: `admin` / `Milan@2026`. Set a production `SECRET_KEY`, use HTTPS, and change this password before deployment.
+
+The admin interface manages: machinery, raw materials, multilingual product content, prices/offers, images, video links, factory gallery, festival banners, logo, contact details, and WhatsApp number. Uploaded assets are stored in `static/uploads/`; operational content is stored in `milan.db`.
